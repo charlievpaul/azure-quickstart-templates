@@ -3,11 +3,38 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "account_name": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "provider_account",
+            "metadata": {
+                "description": "Name for your data share account"
+            }
         },
         "location": {
+            "type": "string",
+            "allowedValues":[
+                "eastus",
+                "eastus2",
+                "southeastasia",
+                "westcentralus",
+                "westeurope",
+                "westus2",
+                "austriliaeast",
+                "northeurope",
+                "uksouth",
+                "usgovvirginia",
+                "usgovarizona"
+            ],
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for your data share"
+            }
+        },
+        "share_name": {
             "type": "String",
-            "defaultValue": "[resourceGroup().location]"
+            "defaultValue": "share",
+            "metadata": {
+                "description": "Name for your data share"
+            }
         }
     },
     "variables": {},
@@ -21,6 +48,17 @@
                 "type": "SystemAssigned"
             },
             "properties": {}
+        },
+        {
+            "type": "Microsoft.DataShare/accounts/shares",
+            "apiVersion": "2019-11-01",
+            "name": "[concat(parameters('account_name'), '/', parameters('share_name'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DataShare/accounts', parameters('account_name'))]"
+            ],
+            "properties": {
+                "shareKind": "CopyBased"
+            }
         }
     ]
 }
